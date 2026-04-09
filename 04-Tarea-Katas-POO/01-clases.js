@@ -10,43 +10,73 @@
 
 // Kata 1: Contador
 class Contador {
-  constructor() {}
+  constructor() {
+    this.valor = 0;
+  }
 
-  incrementar() {}
+  incrementar() {
+    this.valor ++;
+  }
 
-  decrementar() {}
+  decrementar() {
+    this.valor--;
+  }
 
-  reset() {}
+  reset() {
+    this.valor = 0;
+  }
 }
 
 // Kata 2: Calculadora
 class Calculadora {
-  sumar(a, b) {}
+  sumar(a, b) {
+    return a +b;
+  }
 
-  restar(a, b) {}
+  restar(a, b) {
+    return a - b;
+  }
 
-  multiplicar(a, b) {}
+  multiplicar(a, b) {
+    return a * b;
+  }
 
-  dividir(a, b) {}
+  dividir(a, b) {
+    return a / b;
+  }
 }
 
 // Kata 3: Validador
 class Validador {
-  esEmail(valor) {}
+  esEmail(valor) {
+    return valor.contains("@") && valor.contains(".");
+  }
 
-  esPasswordFuerte(valor) {}
+  esPasswordFuerte(valor) {
+    return valor.length >= 8 && 
+         /[A-Z]/.test(valor) && 
+         /[a-z]/.test(valor) && 
+         /[0-9]/.test(valor) && 
+         /[!@#$%^&*(),.?":{}|<>]/.test(valor);
+  }
 }
 
 // Kata 4: Conversor
 class Conversor {
-  celsiusAFahrenheit(celsius) {}
+  celsiusAFahrenheit(celsius) {
+    return (celsius * 9/5) + 32;
+  }
 
-  kmAMillas(km) {}
+  kmAMillas(km) {
+    return km * 0.621371;
+  }
 }
 
 // Kata 5: Generador
 class Generador {
-  numeroAleatorio(min, max) {}
+  numeroAleatorio(min, max) {
+    return Math.random() * (max - min) + min;
+  }
 }
 
 // ─────────────────────────────────────────────
@@ -57,24 +87,38 @@ class Generador {
 class CuentaBancaria {
   #saldo;
 
-  constructor(saldoInicial = 0) {}
+  constructor(saldoInicial = 0) {
+    this.#saldo = saldoInicial;
+  }
 
-  depositar(cantidad) {}
+  depositar(cantidad) {
+    this.saldo += cantidad;
+  }
 
-  retirar(cantidad) {}
+  retirar(cantidad) {
+    this.saldo -= cantidad;
+  }
 
-  get saldo() {}
+  get saldo() {
+    return this.#saldo;
+  }
 }
 
 // Kata 8: Termostato
 class Termostato {
   #temperatura;
 
-  constructor(temperaturaInicial = 20) {}
+  constructor(temperaturaInicial = 20) {
+    this.#temperatura = temperaturaInicial;
+  }
 
-  get temperatura() {}
+  get temperatura() {
+    return this.#temperatura;
+  }
 
-  set temperatura(valor) {}
+  set temperatura(valor) {
+    this.#temperatura = valor;
+  }
 }
 
 // Kata 9: Reloj
@@ -82,13 +126,29 @@ class Reloj {
   #hora;
   #minuto;
 
-  constructor(hora = 0, minuto = 0) {}
+  constructor(hora = 0, minuto = 0) {
+      this.#hora = hora;
+      this.#minuto = minuto;
+  }
 
-  avanzarMinuto() {}
+  avanzarMinuto() {
+    this.#minuto++;
+    if (this.#minuto >= 60) {
+      this.#minuto = 0;
+      this.#hora++;
+      if (this.#hora >= 24) {
+        this.#hora = 0;
+      }
+    }
+  }
 
-  get hora() {}
+  get hora() {
+    return this.#hora;
+  }
 
-  get minuto() {}
+  get minuto() {
+    return this.#minuto;
+  }
 }
 
 // Kata 10: CajaFuerte
@@ -96,9 +156,18 @@ class CajaFuerte {
   #password;
   #secreto;
 
-  constructor(password, secreto) {}
+  constructor(password, secreto) {
+    this.#password = password;
+    this.#secreto = secreto;
+  }
 
-  abrir(intento) {}
+  abrir(intento) {
+    if (intento === this.#password) {
+      return this.#secreto;
+    } else {
+      return "Acceso denegado";
+    }
+  }
 }
 
 // ─────────────────────────────────────────────
@@ -109,15 +178,25 @@ class CajaFuerte {
 class Pila {
   #items;
 
-  constructor() {}
+  constructor() {
+    this.#items = [];
+  }
 
-  apilar(elemento) {}
+  apilar(elemento) {
+    this.#items.push(elemento);
+  }
 
-  desapilar() {}
+  desapilar() {
+    return this.#items.pop();
+  }
 
-  verTope() {}
+  verTope() {
+    return this.#items[this.#items.length - 1];
+  }
 
-  estaVacia() {}
+  estaVacia() {
+    return this.#items.length === 0;
+  }
 }
 
 // ─────────────────────────────────────────────
@@ -128,15 +207,25 @@ class Pila {
 class Cola {
   #elementos;
 
-  constructor() {}
+  constructor() {
+    this.#elementos = [];
+  }
 
-  encolar(elemento) {}
+  encolar(elemento) {
+    this.#elementos.push(elemento);
+  }
 
-  desencolar() {}
+  desencolar() {
+    return this.#elementos.shift();
+  }
 
-  frente() {}
+  frente() {
+    return this.#elementos[0];
+  }
 
-  tamano() {}
+  tamano() {
+    return this.#elementos.length;
+  }
 }
 
 module.exports = {
