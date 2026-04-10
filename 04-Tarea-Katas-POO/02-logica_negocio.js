@@ -10,14 +10,23 @@
 
 // Kata 21: Usuario
 class Usuario {
-  constructor(nombre, email) {}
+  constructor(nombre, email) {
+    this.nombre = nombre;
+    this.email = email; 
+    this.activo = true;
+  }
 }
 
 // Kata 22: Admin
 class Admin extends Usuario {
-  constructor(nombre, email) {}
+  constructor(nombre, email) {
+    super(nombre, email);
+    this.rol = "admin";
+  }
 
-  banearUsuario(usuario) {}
+  banearUsuario(usuario) {
+    usuario.activo = false;
+  }
 }
 
 // Kata 23: Suscripcion
@@ -25,31 +34,68 @@ class Suscripcion {
   #plan;
   #vencimiento;
 
-  constructor(plan, vencimiento) {}
+  constructor(plan, vencimiento) {
+    this.#plan = plan;
+    this.#vencimiento = new Date(vencimiento);
+  }
 
-  renovar(diasExtra) {}
+  renovar(diasExtra) {
+    this.#vencimiento.setDate(this.#vencimiento.getDate() + diasExtra);
+  }
 
-  get plan() {}
+  get plan() {
+    return this.#plan;
+  }
 
-  get vencimiento() {}
+  get vencimiento() {
+    return this.#vencimiento;
+  }
 }
 
 // Kata 24: Perfil
 class Perfil {
-  constructor(datos) {}
+  constructor(datos) {
+    this.edad = datos.edad;
+    this.ciudad = datos.ciudad;
+    this.nombre = datos.nombre;
+  }
 
-  actualizarDatos(nuevosDatos) {}
+  actualizarDatos(nuevosDatos) {
+    this.edad = nuevosDatos.edad;
+    this.ciudad = nuevosDatos.ciudad;
+    this.nombre = nuevosDatos.nombre;
+  }
 }
 
 // Kata 25: Auth
 class Auth {
   #usuarios;
 
-  constructor() {}
+  constructor() {
+    this.#usuarios = [];
+    this.nombre = "";
+    this.email = "";
+    this.password = "";
+  }
 
-  registrar(nombre, email, password) {}
+  registrar(nombre, email, password) {
+    const nuevoUsuario = { nombre, email, password };
+    this.#usuarios.push(nuevoUsuario);
+    console.log(`Usuario ${nombre} registrado exitosamente.`);
+  }
 
-  login(email, password) {}
+  login(email, password) {
+    const usuario = this.#usuarios.find(usu => usu.email === email && usu.password === password);
+    if (usuario) {
+      this.nombre = usuario.nombre;
+      this.email = usuario.email;
+      console.log(`Bienvenido, ${usuario.nombre}!`);
+      return { nombre: usuario.nombre, email: usuario.email };
+    } else {
+      console.log("Sin autorización.");
+      return null;
+    }
+  }
 }
 
 // ─────────────────────────────────────────────
@@ -58,36 +104,77 @@ class Auth {
 
 // Kata 26 y 28: Personaje
 class Personaje {
-  constructor(nombre, hp, ataque) {}
+  constructor(nombre, hp, ataque) {
+    this.nombre = nombre;
+    this.hp = hp;
+    this.ataque = ataque;
+  }
 
-  atacar(objetivo) {}
+  atacar(objetivo) {
+    objetivo.hp -= this.ataque;
+    if (objetivo.hp < 0) {
+      objetivo.hp = 0;
+    }
+  }
 }
 
 // Kata 27: Enemigo
 class Enemigo {
   #loot;
 
-  constructor(nombre, hp, ataque, loot) {}
+  constructor(nombre, hp, ataque, loot) {
+    this.nombre = nombre;
+    this.hp = hp;
+    this.ataque = ataque;
+    this.#loot = loot;
+  }
 
-  atacar(objetivo) {}
+  atacar(objetivo) {
+    objetivo.hp -= this.ataque;
+    if (objetivo.hp < 0) {
+      objetivo.hp = 0;
+    }
+  }
 
-  morir() {}
+  morir() {
+    if (this.hp <= 0) {
+      return this.#loot;
+    } else {
+      return null;
+    }
+  }
 }
 
 // Kata 29: Inventario
 class Inventario {
-  constructor() {}
+  constructor() {
+    this.items = [];
+  }
 
-  agarrarItem(item) {}
+  agarrarItem(item) {
+    this.items.push(item);
+  }
 
-  usarItem(nombre, personaje) {}
+  usarItem(nombre, personaje) {
+    const index = this.items.findIndex(item => item.nombre === nombre);
+    if (index > -1) {
+      this.items.splice(index, 1); // Eliminar item del inventario
+    } else {
+      console.log("Item no encontrado en el inventario.");
+    }
+  }
 }
 
 // Kata 30: Pocion
 class Pocion {
-  constructor(nombre, cantidad) {}
+  constructor(nombre, cantidad) {
+    this.nombre = nombre;
+    this.cantidad = cantidad;
+  }
 
-  usar(personaje) {}
+  usar(personaje) {
+    personaje.hp += this.cantidad;
+  }
 }
 
 // ─────────────────────────────────────────────
@@ -96,9 +183,20 @@ class Pocion {
 
 // Kata 31 y 32: Producto
 class Producto {
-  constructor(id, nombre, precio, stock) {}
+  constructor(id, nombre, precio, stock) {
+    this.id = id;
+    this.nombre = nombre;
+    this.precio = precio;
+    this.stock = stock;
+  }
 
-  vender(cantidad) {}
+  vender(cantidad) {
+    if (cantidad <= this.stock) {
+      this.stock -= cantidad;
+    } else {
+      console.log("Stock insuficiente para la venta de" + cantidad + " unidades de " + this.nombre);
+    }
+  }
 }
 
 // Katas 33-35: Carrito
@@ -106,15 +204,37 @@ class Carrito {
   #productos;
   #descuento;
 
-  constructor() {}
+  constructor() {
+    this.#productos = [];
+    this.#descuento = 0;
+  }
 
-  agregar(producto, cantidad = 1) {}
+  agregar(producto, cantidad = 1) {
+    this.#productos.push({ producto, cantidad });
+  }
 
-  calcularTotal() {}
+  calcularTotal() {
+    const subtotal = this.#productos.reduce((total, item) => {
+      return total + item.producto.precio * item.cantidad;
+    }, 0);
 
-  aplicarCupon(codigo) {}
+    const montoDescuento = (subtotal * this.#descuento) / 100;
+    return subtotal - montoDescuento;
+  }
 
-  get productos() {}
+  aplicarCupon(codigo) {
+    if (codigo === "COD10") {
+      this.#descuento = 10;
+    } else if (codigo === "COD15") {
+      this.#descuento = 15;
+    } else if (codigo === "COD20") {
+      this.#descuento = 20; 
+    } else {console.log("Código de cupón inválido.");
+    }
+  }
+  get productos() {
+    return this.#productos;
+  }
 }
 
 // ─────────────────────────────────────────────
@@ -123,33 +243,61 @@ class Carrito {
 
 // Kata 36: Mesa
 class Mesa {
-  constructor(numero, capacidad) {}
+  constructor(numero, capacidad) {
+    this.numero = numero;
+    this.capacidad = capacidad;
+    this.ocupada = false;
+  }
 }
 
 // Katas 37 y 38: Pedido
 class Pedido {
   #platos;
 
-  constructor(mesa) {}
+  constructor(mesa) {
+    this.mesa = mesa;
+    this.#platos = [];
+  }
 
-  agregarPlato(nombre, precio) {}
+  agregarPlato(nombre, precio) {
+    this.#platos.push({ nombre, precio });
+  }
 
-  cerrarMesa() {}
+  cerrarMesa() {
+    this.mesa.ocupada = false;
+    const subtotal = this.#platos.reduce((total, plato) => {
+      return total + plato.precio;
+    }, 0);
+  }
 
-  get platos() {}
+  get platos() {
+    return this.#platos;
+  }
 }
 
 // Katas 39 y 40: Restaurante
 class Restaurante {
-  constructor() {}
+  constructor() {
+    this.mesas = [];
+    this.pedidos = [];
+    this.recaudacion = 0;
+  }
 
-  agregarMesa(mesa) {}
+  agregarMesa(mesa) {
+    this.mesas.push(mesa);
+  }
 
-  buscarMesaLibre(comensales) {}
+  buscarMesaLibre(comensales) {
+    return this.mesas.find(mesa => !mesa.ocupada && mesa.capacidad >= comensales) || null;
+  }
 
-  cerrarCuenta(total) {}
+  cerrarCuenta(total) {
+    this.recaudacion += total;
+  }
 
-  recaudacionDelDia() {}
+  recaudacionDelDia() {
+    return this.recaudacion;
+  }
 }
 
 module.exports = {
